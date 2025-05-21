@@ -4,20 +4,19 @@
  * @file RelatedReportsStep.js
  * @description Component for Step 3: Linking Related Reports.
  */
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import useReportStore from '../../store/useReportStore';
 import InputField from '../shared/InputField';
 import CheckboxGroupField from '../shared/CheckboxGroupField'; // Assuming CheckboxGroup is better here
 import { RELATED_REPORT_RELATION_TYPES } from '../../constants';
 
 const RelatedReportsStep = () => {
-    const { reportData, addItemToArray, removeItemFromArray, updateItemInArrayField, updateCheckboxGroup } = useReportStore((state) => ({
-        reportData: state.reportData,
-        addItemToArray: state.addItemToArray,
-        removeItemFromArray: state.removeItemFromArray,
-        updateItemInArrayField: state.updateItemInArrayField,
-        updateCheckboxGroup: state.updateCheckboxGroup, // Use the specific action
-    }));
+
+    const reportData = useReportStore((state) => state.reportData);
+    const addItemToArray = useReportStore((state) => state.addItemToArray);
+    const removeItemFromArray = useReportStore((state) => state.removeItemFromArray);
+    const updateItemInArrayField = useReportStore((state) => state.updateItemInArrayField);
+    const updateCheckboxGroup = useReportStore((state) => state.updateCheckboxGroup);
     const relatedReports = reportData.relatedReports || [];
 
     const [errors, setErrors] = useState({}); // Local errors for this step

@@ -8,12 +8,11 @@ import useReportStore, { initialAttachmentState } from '../../store/useReportSto
 import AttachmentForm from '../shared/AttachmentForm';
 
 const AttachmentsStep = () => {
-    const { reportData, addItemToArray, removeItemFromArray, updateItemInArrayField } = useReportStore((state) => ({
-        reportData: state.reportData,
-        addItemToArray: state.addItemToArray,
-        removeItemFromArray: state.removeItemFromArray,
-        updateItemInArrayField: state.updateItemInArrayField,
-    }));
+
+    const reportData = useReportStore((state) => state.reportData);
+    const addItemToArray = useReportStore((state) => state.addItemToArray);
+    const removeItemFromArray = useReportStore((state) => state.removeItemFromArray);
+    const updateItemInArrayField = useReportStore((state) => state.updateItemInArrayField);
 
     const attachments = reportData.irregularReportEvent.attachments || [];
 

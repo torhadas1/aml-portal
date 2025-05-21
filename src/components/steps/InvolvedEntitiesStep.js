@@ -5,13 +5,12 @@ import PersonForm from '../shared/PersonForm';
 import CorporateForm from '../shared/CorporateForm';
 
 const InvolvedEntitiesStep = () => {
-    const { reportData, addItemToArray, removeItemFromArray, updateItemInArrayField, updateCheckboxGroup } = useReportStore((state) => ({
-        reportData: state.reportData,
-        addItemToArray: state.addItemToArray,
-        removeItemFromArray: state.removeItemFromArray,
-        updateItemInArrayField: state.updateItemInArrayField,
-        updateCheckboxGroup: state.updateCheckboxGroup,
-    }));
+
+    const reportData = useReportStore((state) => state.reportData);
+    const addItemToArray = useReportStore((state) => state.addItemToArray);
+    const removeItemFromArray = useReportStore((state) => state.removeItemFromArray);
+    const updateItemInArrayField = useReportStore((state) => state.updateItemInArrayField);
+    const updateCheckboxGroup = useReportStore((state) => state.updateCheckboxGroup);
 
     const persons = reportData.irregularReportEvent.listOfInvolvedEntities.persons || [];
     const corporates = reportData.irregularReportEvent.listOfInvolvedEntities.corporates || [];

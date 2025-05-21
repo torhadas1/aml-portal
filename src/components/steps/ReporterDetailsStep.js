@@ -14,11 +14,10 @@ import { REPORTING_PERSON_ID_TYPES, PHONE_TYPES, EMAIL_TYPES, COUNTRY_CODES } fr
 
 const ReporterDetailsStep = () => {
    // Get state and actions from Zustand store
-   const { reportData, updateField, updateItemInArrayField } = useReportStore((state) => ({
-      reportData: state.reportData,
-      updateField: state.updateField,
-      updateItemInArrayField: state.updateItemInArrayField,
-   }));
+
+   const reportData = useReportStore((state) => state.reportData);
+   const updateField = useReportStore((state) => state.updateField);
+   const updateItemInArrayField = useReportStore((state) => state.updateItemInArrayField);
    const metaData = reportData.irregularSourceMetaData;
    const reportingPerson = metaData.reportingPerson;
 

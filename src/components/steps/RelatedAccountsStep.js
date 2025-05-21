@@ -3,19 +3,18 @@
  * @file RelatedAccountsStep.js
  * @description Component for Step 6: Managing Related Accounts.
  */
-import React from 'react';
+import React, { use } from 'react';
 import useReportStore, { initialBankAccountState, initialOtherAccountState } from '../../store/useReportStore';
 import BankAccountForm from '../shared/BankAccountForm';
 import OtherAccountForm from '../shared/OtherAccountForm';
 
 const RelatedAccountsStep = () => {
-    const { reportData, addItemToArray, removeItemFromArray, updateItemInArrayField, updateCheckboxGroup } = useReportStore((state) => ({
-        reportData: state.reportData,
-        addItemToArray: state.addItemToArray,
-        removeItemFromArray: state.removeItemFromArray,
-        updateItemInArrayField: state.updateItemInArrayField,
-        updateCheckboxGroup: state.updateCheckboxGroup,
-    }));
+
+    const reportData = useReportStore((state) => state.reportData);
+    const addItemToArray = useReportStore((state) => state.addItemToArray);
+    const removeItemFromArray = useReportStore((state) => state.removeItemFromArray);
+    const updateItemInArrayField = useReportStore((state) => state.updateItemInArrayField);
+    const updateCheckboxGroup = useReportStore((state) => state.updateCheckboxGroup);
 
     const bankAccounts = reportData.irregularReportEvent.irregularAccounts || [];
     const otherAccounts = reportData.irregularReportEvent.irregularOtherAccounts || [];

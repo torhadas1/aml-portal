@@ -1,23 +1,23 @@
- // --- File: src/components/steps/EventDetailsStep.js ---
-  
-  /**
-   * @file EventDetailsStep.js
-   * @description Component for Step 4: Event Details and Content.
-   */
-import React, { useState } from 'react';
+// --- File: src/components/steps/EventDetailsStep.js ---
+
+/**
+ * @file EventDetailsStep.js
+ * @description Component for Step 4: Event Details and Content.
+ */
+import React, { use, useState } from 'react';
 import useReportStore from '../../store/useReportStore';
 import InputField from '../shared/InputField';
 import TextAreaField from '../shared/TextAreaField';
 import CheckboxGroupField from '../shared/CheckboxGroupField';
 import SelectField from '../shared/SelectField'; // For boolean toggle
-import { REPORTING_REASONS, REPORT_KEYWORDS, ADDITIONAL_AUTHORITIES, TRANSACTION_COMMITTED_OPTIONS } from '../../constants';
+import { REPORTING_REASONS, REPORT_KEYWORDS, ADDITIONAL_AUTHORITIES, EVENT_TRANSACTION_COMMITTED_OPTIONS } from '../../constants';
 
 const EventDetailsStep = () => {
-    const { reportData, updateField, updateCheckboxGroup } = useReportStore((state) => ({
-        reportData: state.reportData,
-        updateField: state.updateField,
-        updateCheckboxGroup: state.updateCheckboxGroup,
-    }));
+
+    const reportData = useReportStore((state) => state.reportData);
+    const updateField = useReportStore((state) => state.updateField);
+    const updateCheckboxGroup = useReportStore((state) => state.updateCheckboxGroup);
+
     const event = reportData.irregularReportEvent;
 
     const [errors, setErrors] = useState({});
@@ -26,16 +26,16 @@ const EventDetailsStep = () => {
     const handleChange = (e) => {
         const { name, value, type, required } = e.target;
         let processedValue = value;
-         // Basic required validation
-         if (required && value.trim() === '') {
-             setErrors(prev => ({ ...prev, [name]: 'שדה חובה' }));
-         } else {
-             setErrors(prev => ({ ...prev, [name]: null }));
-         }
-         // Handle boolean select
-         if (name === 'irregularReportEvent.transactionCommitted') {
-             processedValue = value === '' ? null : (value === '1'); // Convert '1'/'0' string to boolean/null
-         }
+        // Basic required validation
+        if (required && value.trim() === '') {
+            setErrors(prev => ({ ...prev, [name]: 'שדה חובה' }));
+        } else {
+            setErrors(prev => ({ ...prev, [name]: null }));
+        }
+        // Handle boolean select
+        if (name === 'irregularReportEvent.transactionCommitted') {
+            processedValue = value === '' ? null : (value === '1'); // Convert '1'/'0' string to boolean/null
+        }
         updateField(name, processedValue);
     };
 
@@ -88,20 +88,20 @@ const EventDetailsStep = () => {
                     required
                     error={errors['irregularReportEvent.eventDateTime']}
                 />
-                 <SelectField
+                <SelectField
                     label="האם הדיווח מכיל פעולות?"
                     id="transactionCommitted"
                     name="irregularReportEvent.transactionCommitted"
                     value={event.transactionCommitted === null ? '' : (event.transactionCommitted ? '1' : '0')} // Map boolean/null to '1'/'0'/''
                     onChange={handleChange}
-                    options={TRANSACTION_COMMITTED_OPTIONS}
+                    options={EVENT_TRANSACTION_COMMITTED_OPTIONS}
                     required // Likely required
                     placeholder="בחר..."
                     error={errors['irregularReportEvent.transactionCommitted']}
-                 />
+                />
             </div>
 
-             <div className="p-4 border border-gray-200 rounded-md bg-gray-50">
+            <div className="p-4 border border-gray-200 rounded-md bg-gray-50">
                 <CheckboxGroupField
                     label="סיבת הדיווח (ניתן לבחור יותר מאחד)"
                     name="irregularReportEvent.reportingReasons" // Path to the array
@@ -123,9 +123,9 @@ const EventDetailsStep = () => {
                         className="mt-2"
                     />
                 )}
-             </div>
+            </div>
 
-             <div className="p-4 border border-gray-200 rounded-md bg-gray-50">
+            <div className="p-4 border border-gray-200 rounded-md bg-gray-50">
                 <TextAreaField
                     label="תמצית הידיעה"
                     id="reportingBriefContent"
@@ -136,19 +136,19 @@ const EventDetailsStep = () => {
                     placeholder="תיאור תמציתי של נסיבות הדיווח..."
                     error={errors['irregularReportEvent.reportingBriefContent']}
                 />
-             </div>
+            </div>
 
-             <div className="p-4 border border-gray-200 rounded-md bg-gray-50">
-                 <CheckboxGroupField
+            <div className="p-4 border border-gray-200 rounded-md bg-gray-50">
+                <CheckboxGroupField
                     label="ביטוי מפתח (ניתן לבחור יותר מאחד)"
                     name="irregularReportEvent.reportKeyWordsCodes"
                     options={REPORT_KEYWORDS}
                     selectedCodes={selectedKeywords}
                     onChange={handleCheckboxChange}
                     error={errors['irregularReportEvent.reportKeyWordsCodes']}
-                 />
-                 {isKeywordOtherSelected && (
-                     <InputField
+                />
+                {isKeywordOtherSelected && (
+                    <InputField
                         label="פירוט תחום בסיכון אחר"
                         id="reportKeyWordDesc"
                         name="irregularReportEvent.reportKeyWordDesc"
@@ -157,21 +157,21 @@ const EventDetailsStep = () => {
                         required={isKeywordOtherSelected}
                         error={errors['irregularReportEvent.reportKeyWordDesc']}
                         className="mt-2"
-                     />
-                 )}
-             </div>
+                    />
+                )}
+            </div>
 
-              <div className="p-4 border border-gray-200 rounded-md bg-gray-50">
-                 <CheckboxGroupField
+            <div className="p-4 border border-gray-200 rounded-md bg-gray-50">
+                <CheckboxGroupField
                     label="דווח לרשות אכיפה (אם רלוונטי, ניתן לבחור יותר מאחד)"
                     name="irregularReportEvent.additionalAuthoritiesCodes"
                     options={ADDITIONAL_AUTHORITIES}
                     selectedCodes={selectedAuthorities}
                     onChange={handleCheckboxChange}
                     error={errors['irregularReportEvent.additionalAuthoritiesCodes']}
-                 />
-                 {isAuthorityOtherSelected && (
-                     <InputField
+                />
+                {isAuthorityOtherSelected && (
+                    <InputField
                         label="פירוט גורם אכיפה אחר"
                         id="additionalAuthoritiesDesc"
                         name="irregularReportEvent.additionalAuthoritiesDesc"
@@ -180,11 +180,11 @@ const EventDetailsStep = () => {
                         required={isAuthorityOtherSelected}
                         error={errors['irregularReportEvent.additionalAuthoritiesDesc']}
                         className="mt-2"
-                     />
-                 )}
-             </div>
+                    />
+                )}
+            </div>
 
-             <div className="p-4 border border-gray-200 rounded-md bg-gray-50">
+            <div className="p-4 border border-gray-200 rounded-md bg-gray-50">
                 <TextAreaField
                     label="תוכן הידיעה"
                     id="reportingContent"
@@ -196,7 +196,7 @@ const EventDetailsStep = () => {
                     placeholder="תיאור מלא של המקרה ונסיבותיו..."
                     error={errors['irregularReportEvent.reportingContent']}
                 />
-             </div>
+            </div>
 
         </div>
     );

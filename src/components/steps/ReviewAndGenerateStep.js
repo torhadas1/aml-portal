@@ -3,7 +3,7 @@
  * @file ReviewAndGenerateStep.js
  * @description Component for Step 10: Reviewing entered data and generating the XML.
  */
-import React from 'react';
+import React, { use } from 'react';
 import useReportStore from '../../store/useReportStore';
 
 const ReviewSection = ({ title, data, fields }) => {
@@ -80,9 +80,8 @@ const ReviewSection = ({ title, data, fields }) => {
 
 
 const ReviewAndGenerateStep = () => {
-    const { reportData } = useReportStore((state) => ({
-        reportData: state.reportData,
-    }));
+
+    const reportData = useReportStore((state) => state.reportData);
 
     // Define what to display for each section
     // This is a simplified summary. More detail can be added.

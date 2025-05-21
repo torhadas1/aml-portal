@@ -8,12 +8,11 @@ import useReportStore, { initialPledgeState } from '../../store/useReportStore';
 import PledgeForm from '../shared/PledgeForm';
 
 const PledgesStep = () => {
-    const { reportData, addItemToArray, removeItemFromArray, updateItemInArrayField } = useReportStore((state) => ({
-        reportData: state.reportData,
-        addItemToArray: state.addItemToArray,
-        removeItemFromArray: state.removeItemFromArray,
-        updateItemInArrayField: state.updateItemInArrayField,
-    }));
+
+    const reportData = useReportStore((state) => state.reportData);
+    const addItemToArray = useReportStore((state) => state.addItemToArray);
+    const removeItemFromArray = useReportStore((state) => state.removeItemFromArray);
+    const updateItemInArrayField = useReportStore((state) => state.updateItemInArrayField);
 
     const pledges = reportData.irregularReportEvent.irregularPledges || [];
 
