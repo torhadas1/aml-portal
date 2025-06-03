@@ -74,7 +74,7 @@ const EventDetailsStep = () => {
 
     return (
         <div className="space-y-6">
-            <h2 className="text-xl font-semibold text-gray-800">4. פרטי הדיווח ותוכן הידיעה (Report Details & Event Content)</h2>
+            <h2 className="text-xl font-semibold text-gray-800">5. פרטי הדיווח ותוכן הידיעה (Report Details & Event Content)</h2>
             <p className="text-sm text-gray-600">פרטי האירוע שהוביל לדיווח ותיאור מפורט.</p>
 
             <div className="p-4 border border-gray-200 rounded-md bg-gray-50 grid grid-cols-1 md:grid-cols-2 gap-x-4">

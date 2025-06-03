@@ -20,6 +20,12 @@ import {
 } from '../../constants';
 
 const BankAccountForm = ({ accountData, accountIndex, onAccountChange, onRemoveAccount, basePath }) => {
+    // Ensure accountData and its nested properties are defined before use
+    const safeAccountData = accountData || {};
+    const relatedEntitiesList = safeAccountData.relatedEntities || []; // Default to empty array
+    const relationsToEventList = safeAccountData.relationsToEvent || []; // Default to empty array
+
+
     const { updateItemInArrayField, updateCheckboxGroup, addItemToArray, removeItemFromArray, getAllEntitiesForLinking } = useReportStore();
     const [selectedEntityForRelation, setSelectedEntityForRelation] = useState('');
     const [selectedRelationType, setSelectedRelationType] = useState('');
@@ -34,10 +40,13 @@ const BankAccountForm = ({ accountData, accountIndex, onAccountChange, onRemoveA
         onAccountChange(accountIndex, field, processedValue);
     };
 
-    const handleEventRelationChange = (groupName, code, isChecked) => {
-        const path = `${basePath}.relationsToEvent`; // This is the direct path to the array
-        updateCheckboxGroup(path, 'relationTypeID', code, isChecked);
+    const handleEventRelationChange = (groupNameIgnored, code, isChecked) => {
+        // The 'name' from CheckboxGroupField corresponds to the last segment of the path
+        // basePath is 'irregularReportEvent.irregularAccounts.[accountIndex]'
+        // We want to update 'irregularReportEvent.irregularAccounts.[accountIndex].relationsToEvent'
+        updateCheckboxGroup(`${basePath}.relationsToEvent`, 'relationTypeID', code, isChecked);
     };
+
 
     const handleAddEntityRelation = () => {
         if (!selectedEntityForRelation || !selectedRelationType) {
@@ -45,8 +54,8 @@ const BankAccountForm = ({ accountData, accountIndex, onAccountChange, onRemoveA
             return;
         }
         const newRelation = {
-            reporterObjId: `rel_${Date.now()}`, // Unique ID for the relation itself
-            relatedObjID: selectedEntityForRelation, // ID of the Person/Corporate
+            reporterObjId: `rel_acct_ent_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`, // More unique ID
+            relatedObjID: selectedEntityForRelation,
             relationTypeID: parseInt(selectedRelationType, 10),
             relationTypeDesc: '' // Add if 'Other' is selected for relationTypeID
         };
@@ -59,13 +68,13 @@ const BankAccountForm = ({ accountData, accountIndex, onAccountChange, onRemoveA
         removeItemFromArray(`${basePath}.relatedEntities`, relationIndex);
     };
 
-    const selectedEventRelations = accountData.relationsToEvent?.map(r => r.relationTypeID) || [];
+    const selectedEventRelations = relationsToEventList.map(r => r.relationTypeID);
     const financialInstituteOptions = FINANCIAL_INSTITUTE_TYPES.filter(type => type.code === 1 || type.code === 6);
-    const currentBankCodes = accountData.financialInstituteType === 6 ? [POST_BANK_CODE] : BANK_CODES;
+    const currentBankCodes = safeAccountData.financialInstituteType === 6 ? [POST_BANK_CODE] : BANK_CODES;
 
     const getEntityAccountRelations = () => {
-        if (accountData.financialInstituteType === 1) return ENTITY_ACCOUNT_RELATIONS_BANK;
-        if (accountData.financialInstituteType === 6) return ENTITY_ACCOUNT_RELATIONS_POST_BANK;
+        if (safeAccountData.financialInstituteType === 1) return ENTITY_ACCOUNT_RELATIONS_BANK;
+        if (safeAccountData.financialInstituteType === 6) return ENTITY_ACCOUNT_RELATIONS_POST_BANK;
         return [];
     };
 
@@ -81,25 +90,27 @@ const BankAccountForm = ({ accountData, accountIndex, onAccountChange, onRemoveA
                 &times;
             </button>
             <h3 className="text-md font-semibold text-gray-700 mb-3">
-                חשבון בנק/דואר #{accountIndex + 1} (ID: {accountData.reporterObjId?.slice(-6)})
+                חשבון בנק/דואר #{accountIndex + 1} (ID: {safeAccountData.reporterObjId?.slice(-6)})
             </h3>
 
             <CheckboxGroupField
                 label="קשר חשבון לידיעה"
-                name="relationsToEvent" // Path relative to this specific account
+                name="relationsToEvent" // This name is used by CheckboxGroupField's internal handleChange
                 options={ACCOUNT_EVENT_RELATIONS}
                 selectedCodes={selectedEventRelations}
-                onChange={(groupNameIgnored, code, isChecked) => handleEventRelationChange(`${basePath}.relationsToEvent`, code, isChecked)}
+                onChange={handleEventRelationChange} // Pass our specific handler
                 required
             />
             {selectedEventRelations.includes(6) && ( // Assuming 6 is 'Other'
                 <InputField
                     label="פירוט קשר חשבון לידיעה - אחר"
-                    value={accountData.relationsToEvent?.find(r => r.relationTypeID === 6)?.relationTypeDesc || ''}
+                    value={relationsToEventList.find(r => r.relationTypeID === 6)?.relationTypeDesc || ''}
                     onChange={(e) => {
-                         const updatedRelations = accountData.relationsToEvent.map(r =>
+                         const updatedRelations = relationsToEventList.map(r =>
                             r.relationTypeID === 6 ? { ...r, relationTypeDesc: e.target.value } : r
                         );
+                        // This onAccountChange expects to update a field directly on the account object.
+                        // For an array like relationsToEvent, it should be a direct update.
                         onAccountChange(accountIndex,'relationsToEvent', updatedRelations);
                     }}
                     required={selectedEventRelations.includes(6)}
@@ -107,27 +118,27 @@ const BankAccountForm = ({ accountData, accountIndex, onAccountChange, onRemoveA
             )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
-                <SelectField label="סוג מוסד פיננסי" value={accountData.financialInstituteType} onChange={(e) => handleChange('financialInstituteType', e.target.value)} options={financialInstituteOptions} required placeholder="בחר סוג..." />
-                <SelectField label="ארץ הבנק/המוסד" value={accountData.financialInstituteCountry} onChange={(e) => handleChange('financialInstituteCountry', e.target.value)} options={COUNTRY_CODES} required placeholder="בחר מדינה..." />
-                {accountData.financialInstituteType && (
-                    <SelectField label="מספר בנק/מוסד" value={accountData.financialInstituteID} onChange={(e) => handleChange('financialInstituteID', e.target.value)} options={currentBankCodes} required placeholder="בחר בנק..." />
+                <SelectField label="סוג מוסד פיננסי" value={safeAccountData.financialInstituteType ?? ''} onChange={(e) => handleChange('financialInstituteType', e.target.value)} options={financialInstituteOptions} required placeholder="בחר סוג..." />
+                <SelectField label="ארץ הבנק/המוסד" value={safeAccountData.financialInstituteCountry ?? ''} onChange={(e) => handleChange('financialInstituteCountry', e.target.value)} options={COUNTRY_CODES} required placeholder="בחר מדינה..." />
+                {safeAccountData.financialInstituteType && (
+                    <SelectField label="מספר בנק/מוסד" value={safeAccountData.financialInstituteID ?? ''} onChange={(e) => handleChange('financialInstituteID', e.target.value)} options={currentBankCodes} required placeholder="בחר בנק..." />
                 )}
-                <InputField label="שם בנק/מוסד (אופציונלי אם נבחר קוד)" value={accountData.financialInstituteName} onChange={(e) => handleChange('financialInstituteName', e.target.value)} />
-                <InputField label="מספר סניף" value={accountData.branchID} onChange={(e) => handleChange('branchID', e.target.value)} required />
-                <InputField label="מספר חשבון" value={accountData.accountNum} onChange={(e) => handleChange('accountNum', e.target.value)} required />
-                <InputField label="שם חשבון (כפי שמופיע בבנק)" value={accountData.accountName} onChange={(e) => handleChange('accountName', e.target.value)} />
-                <InputField label="סוג חשבון (קבוע 77)" value={accountData.accountType} readOnly />
-                <InputField label="קוד העברת כספים (IBAN/BIC)" value={accountData.moneyTransferCode} onChange={(e) => handleChange('moneyTransferCode', e.target.value)} />
-                <SelectField label="סוג קוד העברת כספים" value={accountData.moneyTransferCodeType} onChange={(e) => handleChange('moneyTransferCodeType', e.target.value)} options={MONEY_TRANSFER_CODE_TYPES} placeholder="בחר סוג קוד..." />
-                {accountData.moneyTransferCodeType === 3 && (
-                    <InputField label="פירוט סוג קוד - אחר" value={accountData.moneyTransferCodeTypeDesc} onChange={(e) => handleChange('moneyTransferCodeTypeDesc', e.target.value)} required />
+                <InputField label="שם בנק/מוסד (אופציונלי אם נבחר קוד)" value={safeAccountData.financialInstituteName ?? ''} onChange={(e) => handleChange('financialInstituteName', e.target.value)} />
+                <InputField label="מספר סניף" value={safeAccountData.branchID ?? ''} onChange={(e) => handleChange('branchID', e.target.value)} required />
+                <InputField label="מספר חשבון" value={safeAccountData.accountNum ?? ''} onChange={(e) => handleChange('accountNum', e.target.value)} required />
+                <InputField label="שם חשבון (כפי שמופיע בבנק)" value={safeAccountData.accountName ?? ''} onChange={(e) => handleChange('accountName', e.target.value)} />
+                <InputField label="סוג חשבון (קבוע 77)" value={safeAccountData.accountType ?? 77} readOnly />
+                <InputField label="קוד העברת כספים (IBAN/BIC)" value={safeAccountData.moneyTransferCode ?? ''} onChange={(e) => handleChange('moneyTransferCode', e.target.value)} />
+                <SelectField label="סוג קוד העברת כספים" value={safeAccountData.moneyTransferCodeType ?? ''} onChange={(e) => handleChange('moneyTransferCodeType', e.target.value)} options={MONEY_TRANSFER_CODE_TYPES} placeholder="בחר סוג קוד..." />
+                {safeAccountData.moneyTransferCodeType === 3 && (
+                    <InputField label="פירוט סוג קוד - אחר" value={safeAccountData.moneyTransferCodeTypeDesc ?? ''} onChange={(e) => handleChange('moneyTransferCodeTypeDesc', e.target.value)} required />
                 )}
             </div>
 
              {/* Related Entities to Account */}
             <div className="mt-4 pt-3 border-t">
                 <h4 className="text-md font-medium text-gray-700 mb-2">ישויות קשורות לחשבון</h4>
-                {accountData.relatedEntities?.map((rel, relIdx) => (
+                {relatedEntitiesList.map((rel, relIdx) => (
                     <div key={rel.reporterObjId || relIdx} className="flex items-center justify-between p-2 border-b">
                         <span>
                             {allEntities.find(e => e.id === rel.relatedObjID)?.name || rel.relatedObjID}

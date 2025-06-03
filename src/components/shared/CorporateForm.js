@@ -95,7 +95,7 @@ const CorporateForm = ({ corporateData, corporateIndex, onCorporateChange, onRem
                 name="relationsToEvent"
                 options={ENTITY_EVENT_RELATIONS}
                 selectedCodes={selectedEventRelations}
-                onChange={(groupName, code, isChecked) => onCheckboxGroupChange('relationsToEvent', 'relationTypeID', code, isChecked)}
+                onChange={(groupNameCorporate, code, isChecked) => onCheckboxGroupChange(groupNameCorporate, 'relationTypeID', code, isChecked)}
                 required
             />
             {selectedEventRelations.includes(24) && ( // Assuming 24 is 'Other'

@@ -100,7 +100,7 @@ const PersonForm = ({ personData, personIndex, onPersonChange, onRemovePerson, o
                 name="relationsToEvent" // This name is used by onCheckboxGroupChange to build the path
                 options={ENTITY_EVENT_RELATIONS}
                 selectedCodes={selectedEventRelations}
-                onChange={(groupName, code, isChecked) => onCheckboxGroupChange('relationsToEvent', 'relationTypeID', code, isChecked)}
+                onChange={(groupPath, code, isChecked) => onCheckboxGroupChange(groupPath, 'relationTypeID', code, isChecked)}
                 required
             />
             {selectedEventRelations.includes(24) && ( // Assuming 24 is 'Other'
@@ -169,7 +169,7 @@ const PersonForm = ({ personData, personIndex, onPersonChange, onRemovePerson, o
                 name="professionTypeCodes"
                 options={PROFESSION_CODES_EXAMPLE} // Replace with actual CBS codes
                 selectedCodes={selectedProfessionCodes}
-                onChange={(groupName, code, isChecked) => onCheckboxGroupChange('professionTypeCodes', 'professionTypeCode', code, isChecked)}
+                onChange={(groupName, code, isChecked) => onCheckboxGroupChange(groupName, 'professionTypeCode', code, isChecked)}
             />
             {(selectedProfessionCodes.includes('xxxx') || !selectedProfessionCodes.length) && ( // Assuming 'xxxx' is the code for 'Other' or if no code is selected
                 <InputField

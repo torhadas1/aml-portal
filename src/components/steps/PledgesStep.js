@@ -30,7 +30,7 @@ const PledgesStep = () => {
 
     return (
         <div className="space-y-8">
-            <h2 className="text-xl font-semibold text-gray-800">7. בטוחות (Pledges / Collateral)</h2>
+            <h2 className="text-xl font-semibold text-gray-800">8. בטוחות (Pledges / Collateral)</h2>
             <p className="text-sm text-gray-600">יש למלא את כל פרטי הבטוחות הרלוונטיות לדיווח.</p>
 
             <div className="p-4 border border-gray-200 rounded-md">

@@ -32,7 +32,7 @@ const TransactionsStep = () => {
 
     return (
         <div className="space-y-8">
-            <h2 className="text-xl font-semibold text-gray-800">8. פעולות ונכסים (Transactions and Assets)</h2>
+            <h2 className="text-xl font-semibold text-gray-800">4. פעולות ונכסים (Transactions and Assets)</h2>
             <p className="text-sm text-gray-600">
                 יש לדווח על כל הפעולות והנכסים הפיננסיים המעורבים. כל פעולה תזוהה על ידי מזהה ראשי ומשני.
                 <br/>

@@ -42,7 +42,7 @@ const RelatedAccountsStep = () => {
 
     return (
         <div className="space-y-8">
-            <h2 className="text-xl font-semibold text-gray-800">6. פרטי חשבונות קשורים (Related Accounts)</h2>
+            <h2 className="text-xl font-semibold text-gray-800">7. פרטי חשבונות קשורים (Related Accounts)</h2>
             <p className="text-sm text-gray-600">יש למלא את כל פרטי החשבונות הרלוונטיים לדיווח, כולל חשבונות צד נגדי או חשבונות ששועבדו.</p>
 
             {/* Bank / Post Bank Accounts Section */}
