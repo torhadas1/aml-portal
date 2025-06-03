@@ -29,7 +29,7 @@ The application guides users through all necessary data entry sections and, upon
 
 ## Project Structure Overview
 
-```
+
 aml-portal/
 ├── public/                 # Static assets and index.html
 ├── src/
@@ -49,7 +49,7 @@ aml-portal/
 ├── .gitignore
 ├── package.json
 └── README.md
-```
+
 
 ## Setup and Local Development
 
