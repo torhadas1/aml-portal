@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/aml-portal/static/css/main.cc7b7aab.css",
+    "main.js": "/aml-portal/static/js/main.cf74204f.js",
+    "static/js/453.ce23f356.chunk.js": "/aml-portal/static/js/453.ce23f356.chunk.js",
+    "index.html": "/aml-portal/index.html",
+    "main.cc7b7aab.css.map": "/aml-portal/static/css/main.cc7b7aab.css.map",
+    "main.cf74204f.js.map": "/aml-portal/static/js/main.cf74204f.js.map",
+    "453.ce23f356.chunk.js.map": "/aml-portal/static/js/453.ce23f356.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.cc7b7aab.css",
+    "static/js/main.cf74204f.js"
+  ]
+}
