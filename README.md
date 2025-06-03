@@ -56,20 +56,20 @@ aml-portal/
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 1.  **Clone the repository:**
-    ```bash
+    bash
     git clone <repository-url>
     cd aml-portal
-    ```
+    
 
 2.  **Install dependencies:**
-    ```bash
+    bash
     npm install
-    ```
+    
 
 3.  **Run the application:**
-    ```bash
+    bash
     npm start
-    ```
+    
     This runs the app in development mode. Open [http://localhost:3000](http://localhost:3000) to view it in your browser. The page will reload if you make edits.
 
 ## Usage
